@@ -9,6 +9,7 @@ export type ListPembelian = {
 }
 
 export type GetUser = {
+    _id: string;
     name: string;
     email: string;
     role: string;
@@ -21,8 +22,12 @@ export type ResponseCreateUser = {
 }
 
 export type ResponseLogin = {
-    token: string;
+    _id: string;
+    email: string;
+    role: string;
+    amount?: number;
     name: string;
+    password: string;
 }
 
 export type ResponseCreateOrder = {

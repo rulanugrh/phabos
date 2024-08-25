@@ -1,14 +1,12 @@
-import "dotenv"
-import { initializeApp } from "firebase/app";
+import dotenv from "dotenv"
+import { initializeApp } from "firebase-admin/app";
+import { getFirestore  } from "firebase-admin/firestore"
+import { credential } from "firebase-admin";
+dotenv.config()
 
-const config = {
-    apiKey: process.env.API_KEY,
-    authDomain: process.env.API_AUTH_DOMAIN,
-    projectId: process.env.API_PROJECT_ID,
-    storageBucket: process.env.API_STORAGE_BUCKET,
-    messageSenderId: process.env.API_MESSAGE_SENDER_ID,
-    appId: process.env.API_APP_ID,
-    measurementId: process.env.API_MEASUREMENT_ID
-};
+const fileKey = require('../../data/key.json')
 
-export const firebase = initializeApp(config);
+initializeApp({
+    credential: credential.cert(fileKey)
+});
+export const firestore = getFirestore();
