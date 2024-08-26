@@ -132,9 +132,9 @@ export const productDelete = async(id: string): Promise<any> => {
     }
 }
 
-export const productByName = async(name: string): Promise<ResponseGetProduct[]> => {
+export const productByName = async(name: string, category: string): Promise<ResponseGetProduct[]> => {
     try {
-        const data = await firestore.collection('products').where('name', "==", name).get()
+        const data = await firestore.collection('products').where('name', "==", name).where("category", "==", category).get()
         const result = data.docs.map((doc) => {
             const dt = doc.data()
 

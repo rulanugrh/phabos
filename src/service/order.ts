@@ -24,6 +24,7 @@ export const orderRegister = async(req: OrderRequest): Promise<ResponseCreateOrd
         const result = (await firestore.collection('orders').doc(_order.id).get()).data()
 
         const response: ResponseCreateOrder = {
+            id: _order.id,
             category: result?.category,
             price: result?.product_price,
             status: result?.status,
@@ -31,7 +32,8 @@ export const orderRegister = async(req: OrderRequest): Promise<ResponseCreateOrd
             tanggal: result?.tanggal_pemesanan,
             process: result?.process,
             nominal: result?.total,
-            product_name: result?.product_name
+            product_name: result?.product_name,
+            quantity: result?.jumlah
         }
 
         return response

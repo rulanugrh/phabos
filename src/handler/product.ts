@@ -128,8 +128,9 @@ export const handlerProductDelete = async(req: Request, res: Response): Promise<
 
 export const handlerProductGetByName = async(req: Request, res: Response): Promise<Response> => {
     const name = req.query.name as string
+    const category = req.query.category as string
     try {
-        const data = await productByName(name)
+        const data = await productByName(name, category)
         if (data === null || data === undefined) {
             return res.status(404).json({
                 code: 404,

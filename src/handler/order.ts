@@ -1,7 +1,8 @@
 import { Request, Response } from "express";
-import { readID } from "../middleware/jwt";
+import { readEmail, readID } from "../middleware/jwt";
 import { OrderRequest } from "../typed/dto";
 import { orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister } from "../service/order";
+import { requestTransaction } from "../util/tripay";
 
 export const handlerOrderRegister = async(req: Request, res: Response): Promise<Response> => {
     const { product_id, via, jumlah } = req.body
@@ -9,6 +10,7 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
 
     try {
         const user_id = readID(token)
+        const user_email = readEmail(token)
         const request: OrderRequest = {
             user_id: user_id,
             product_id: product_id,
@@ -18,10 +20,19 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
         }
 
         const response = await orderRegister(request)
+
+        const { checkout_url, status } = await requestTransaction(response, user_email)
         return res.status(201).json({
             code: 201,
             msg: 'success create order',
-            data: response
+            data: {
+                product_name: response.product_name,
+                product_price: response.price,
+                quantity: response.quantity,
+                total: response.nominal,
+                checkout_url: checkout_url,
+                status: status
+            },
         })
     } catch (error) {
         return res.status(400).json({

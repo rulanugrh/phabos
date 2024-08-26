@@ -32,8 +32,10 @@ export type ResponseLogin = {
 }
 
 export type ResponseCreateOrder = {
+    id: string;
     category: string;
     product_name: string;
+    quantity: number;
     tanggal?: string
     via: string;
     status?: string
