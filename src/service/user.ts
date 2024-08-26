@@ -56,7 +56,7 @@ export const userLogin = async(request: UserLogin): Promise<ResponseLogin> => {
         if (error instanceof FirebaseFirestoreError) {
             throw new Error(error.message)
         }
-        
+        console.log(error)
         throw new Error('Internal Server Error')
     }
 }

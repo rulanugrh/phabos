@@ -4,14 +4,15 @@ import { productDelete, productGetAll, productGetByID, productRegister, productU
 
 
 export const handlerProductRegister = async(req: Request, res: Response): Promise<Response> => {
-    const { name, process, price, description, category } = req.body
+    const { name, process, price, description, category, stock } = req.body
     try {
         const request: ProductRegister = {
             name: name,
             description: description,
             price: price,
             process: process,
-            category: category
+            category: category,
+            stock: stock
         }
 
         const data = await productRegister(request)

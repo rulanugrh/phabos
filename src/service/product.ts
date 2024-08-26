@@ -12,6 +12,7 @@ export const productRegister = async(req: ProductRegister): Promise<ResponseCrea
             description: req.description,
             process: req.process,
             category: req.category,
+            stock: req.stock
         }
 
         const _res = await firestore.collection('products').doc(uuid()).set(request)
@@ -20,6 +21,7 @@ export const productRegister = async(req: ProductRegister): Promise<ResponseCrea
             process: req.process,
             price: req.price,
             category: req.category,
+            stock: req.stock
         }
         
         return response
@@ -43,6 +45,7 @@ export const productGetByID = async(id: string): Promise<ResponseGetProduct> => 
             process: res?.process as string,
             price: res?.price as number,
             category: res?.category as string,
+            stock: res?.stock as number
         }
 
         return response
@@ -68,6 +71,7 @@ export const productGetAll = async(): Promise<ResponseGetProduct[]> => {
                 product_name: dt?.name,
                 description: dt?.description,
                 category: dt?.category,
+                stock: dt?.stock
             }
 
             return result
@@ -101,7 +105,8 @@ export const productUpdate = async(id: string, req: ProductUpdate): Promise<Resp
             price: result?.price,
             product_name: result?.name,
             description: result?.description,
-            category: result?.category
+            category: result?.category,
+            stock: result?.stock
         }
 
         return response
@@ -139,7 +144,8 @@ export const productByName = async(name: string): Promise<ResponseGetProduct[]> 
                 price: dt?.price,
                 category: dt?.category,
                 description: dt?.description,
-                process: dt?.process
+                process: dt?.process,
+                stock: dt?.stock
             }
 
             return result

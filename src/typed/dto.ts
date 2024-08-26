@@ -18,23 +18,19 @@ export type ProductRegister = {
     price: number;
     description: string;
     process: string;
+    stock: number;
 }
 
 export type OrderRequest = {
-    userID?: string;
-    category: string;
-    product_name: string;
-    tanggal?: string
+    user_id: string;
+    product_id: string;
     via: string;
     status?: string
-    harga: number;
-    process: string;
     jumlah: number;
-    nominal: number;
 }
 
 export type TopUp = {
-    userId: string;
+    user_id: string;
     balance: number;
     via: string;
     tanggal: string;

@@ -1,11 +1,12 @@
 export type ListPembelian = {
+    id: string;
     via: string;
     category: string;
     product_name: string;
     tanggal?: string
     status?: string
     process: string;
-    nominal: string;
+    total: string;
 }
 
 export type GetUser = {
@@ -53,6 +54,7 @@ export type ResponseCreateProduct = {
     product_name: string;
     price: number
     process: string;
+    stock: number;
 }
 
 export type ResponseGetProduct = {
@@ -62,4 +64,5 @@ export type ResponseGetProduct = {
     description: string;
     price: number
     process: string;
+    stock: number;
 }

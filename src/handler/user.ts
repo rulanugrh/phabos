@@ -100,7 +100,7 @@ export const handlerUserCount = async(req: Request, res: Response): Promise<Resp
         const data = await userCount()
         return res.status(200).json({
             code: 200,
-            msg: 'success count user',
+            msg: 'total user active',
             total_user: data
         })
     } catch (error) {

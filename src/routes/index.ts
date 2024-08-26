@@ -1,10 +1,12 @@
 import { Application, Router } from "express";
 import { routerAuth } from "./auth";
 import { routerProduct } from "./product";
+import { routerOrder } from "./order";
 
 const routes: Array<[string, Router]> = [
     ["auth", routerAuth],
     ["product", routerProduct],
+    ["order", routerOrder]
 ]
 
 export const Routes = (app: Application) => {
