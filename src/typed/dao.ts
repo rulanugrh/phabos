@@ -36,9 +36,9 @@ export type ResponseCreateOrder = {
     tanggal?: string
     via: string;
     status?: string
-    harga: string;
+    price: number;
     process: string;
-    nominal: string;
+    nominal: number;
 }
 
 export type RiwayatTopup = {
@@ -46,4 +46,20 @@ export type RiwayatTopup = {
     via: string;
     tanggal: string;
     status: string;
+}
+
+export type ResponseCreateProduct = {
+    category: string;
+    product_name: string;
+    price: number
+    process: string;
+}
+
+export type ResponseGetProduct = {
+    id: string;
+    category: string;
+    product_name: string;
+    description: string;
+    price: number
+    process: string;
 }

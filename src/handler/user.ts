@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserLogin, UserRegister } from "../typed/dto";
-import { userGetMe, userLogin, userRegister } from "../service/users";
+import { userGetMe, userLogin, userRegister } from "../service/user";
 import bcrypt from 'bcrypt';
 import { generateToken, PayloadToken, readEmail } from "../middleware/jwt";
 
@@ -21,9 +21,9 @@ export const handlerUserRegister = async(req: Request, res: Response): Promise<R
             data: response
         })
     } catch (error) {
-        return res.status(500).json({
+        return res.status(400).json({
             msg: String(error),
-            code: 500
+            code: 400
         })
     }
 }
@@ -63,9 +63,9 @@ export const handlerUserLogin = async(req: Request, res: Response): Promise<Resp
             }
         })
     } catch (error) {
-        return res.status(500).json({
+        return res.status(400).json({
             msg: String(error),
-            code: 500
+            code: 400
         })
     }
 }
@@ -89,9 +89,9 @@ export const handlerGetMe = async(req: Request, res: Response): Promise<Response
             data: data
         })
     } catch (error) {
-        return res.status(500).json({
+        return res.status(400).json({
             msg: String(error),
-            code: 500
+            code: 400
         })
     }
 }

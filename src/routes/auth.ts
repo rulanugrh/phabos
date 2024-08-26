@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { handlerGetMe, handlerUserLogin, handlerUserRegister } from "../handler/users";
+import { handlerGetMe, handlerUserLogin, handlerUserRegister } from "../handler/user";
 
 export const routerAuth: Router = express.Router()
 routerAuth.post("/register", handlerUserRegister)

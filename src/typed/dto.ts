@@ -27,10 +27,10 @@ export type OrderRequest = {
     tanggal?: string
     via: string;
     status?: string
-    harga: string;
+    harga: number;
     process: string;
-    jumlah: string;
-    nominal: string;
+    jumlah: number;
+    nominal: number;
 }
 
 export type TopUp = {
@@ -39,4 +39,12 @@ export type TopUp = {
     via: string;
     tanggal: string;
     status: string;
+}
+
+export type ProductUpdate = {
+    name?: string;
+    category?: string;
+    price?: number;
+    description?: string;
+    process?: string;
 }

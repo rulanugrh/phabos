@@ -3,6 +3,7 @@ import { GetUser, ResponseCreateUser, ResponseLogin } from "../typed/dao";
 import { UserLogin, UserRegister } from "../typed/dto";
 import { v4 as uuid } from 'uuid';
 import bcrypt from "bcrypt"
+import { FirebaseFirestoreError } from "firebase-admin/firestore";
 
 export const userRegister = async(request: UserRegister): Promise<ResponseCreateUser> => {
     try {
@@ -26,7 +27,11 @@ export const userRegister = async(request: UserRegister): Promise<ResponseCreate
 
         return result
     } catch (error) {
-        throw new Error('internal server error')
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+        
+        throw new Error('Internal Server Error')
     }
 }
 
@@ -48,7 +53,11 @@ export const userLogin = async(request: UserLogin): Promise<ResponseLogin> => {
 
         return response
     } catch (error) {
-        throw new Error('internal server error')
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+        
+        throw new Error('Internal Server Error')
     }
 }
 
@@ -65,6 +74,10 @@ export const userGetMe = async(email: string): Promise<GetUser> => {
 
         return response
     } catch (error) {
-        throw new Error('internal server error')
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+        
+        throw new Error('Internal Server Error')
     }
 }
