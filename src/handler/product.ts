@@ -1,6 +1,6 @@
 import { Response, Request } from "express"
 import { ProductRegister, ProductUpdate } from "../typed/dto"
-import { productDelete, productGetAll, productGetByID, productRegister, productUpdate, productByName } from "../service/product"
+import { productDelete, productGetAll, productGetByID, productRegister, productUpdate, productByName, productCount } from "../service/product"
 
 
 export const handlerProductRegister = async(req: Request, res: Response): Promise<Response> => {
@@ -140,6 +140,22 @@ export const handlerProductGetByName = async(req: Request, res: Response): Promi
             code: 200,
             msg: 'success get all product',
             data: data
+        })
+    } catch (error) {
+        return res.status(400).json({
+            msg: String(error),
+            code: 400
+        })
+    }
+}
+
+export const handlerProductCount = async(req: Request, res: Response): Promise<Response> => {
+    try {
+        const data = await productCount()
+        return res.status(200).json({
+            code: 200,
+            msg: 'success count product',
+            total_product: data
         })
     } catch (error) {
         return res.status(400).json({

@@ -154,3 +154,16 @@ export const productByName = async(name: string): Promise<ResponseGetProduct[]> 
         throw new Error('Internal Server Error')
     }
 }
+
+export const productCount = async(): Promise<number> => {
+    try {
+        const data = await firestore.collection('products').count().get()
+        return data.data().count
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}

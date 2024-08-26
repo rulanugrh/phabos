@@ -81,3 +81,16 @@ export const userGetMe = async(email: string): Promise<GetUser> => {
         throw new Error('Internal Server Error')
     }
 }
+
+export const userCount = async(): Promise<number> => {
+    try {
+        const data = await firestore.collection('users').count().get()
+        return data.data().count
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}
