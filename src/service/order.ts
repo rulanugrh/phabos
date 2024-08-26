@@ -17,6 +17,7 @@ export const orderRegister = async(req: OrderRequest): Promise<ResponseCreateOrd
             total: product?.price * req.jumlah,
             tanggal_pesanan: new Date().toDateString(),
             via: req.via,
+            product_id: req.product_id,
         }
 
         const _order = await firestore.collection('orders').doc(uuid())
