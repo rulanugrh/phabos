@@ -11,7 +11,6 @@ export const handlerUserRegister = async(req: Request, res: Response): Promise<R
             name: name,
             email: email,
             password: password,
-            role: 'user',
         }
 
         const response = await userRegister(request)
@@ -50,7 +49,6 @@ export const handlerUserLogin = async(req: Request, res: Response): Promise<Resp
             id: data._id,
             name: data.name,
             email: data.email,
-            role: data.role
         }
 
         const token = generateToken(payload)

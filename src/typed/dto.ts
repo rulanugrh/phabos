@@ -3,7 +3,6 @@ export type UserRegister = {
     name: string;
     email: string;
     password: string;
-    role?: string;
     amount?: number;
 }
 

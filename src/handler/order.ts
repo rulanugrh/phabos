@@ -83,10 +83,10 @@ export const handlerListOrderByUid = async(req: Request, res: Response): Promise
     try {
         const user_id = readID(token)
         const data = await orderList(user_id)
-        if (data === null || data === undefined) {
-            return res.status(404).json({
-                code: 404,
-                msg: 'data not found'
+        if (!data || data.length === 0) {
+            return res.status(200).json({
+                code: 200,
+                msg: 'Maaf kamu belum order sama sekali'
             })
         }
 

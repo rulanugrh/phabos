@@ -13,7 +13,6 @@ export const userRegister = async(request: UserRegister): Promise<ResponseCreate
             name: request.name,
             email: request.email,
             password: hashedPassword,
-            role: 'user',
             amount: 0,
         }
 

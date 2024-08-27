@@ -7,14 +7,12 @@ export type PayloadToken = {
     id: string,
     email: string,
     name: string,
-    role: string,
 }
 export const generateToken = (payload: PayloadToken): string => {
     return jsonwebtoken.sign({
         id: payload.id,
         name: payload.name,
         email: payload.email,
-        role: payload.role
     }, process.env.APP_SECRET as string, {
         expiresIn: '1h',
         algorithm: 'HS256'

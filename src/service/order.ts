@@ -118,12 +118,12 @@ export const orderCountingPemasukanTotal = async(): Promise<number> => {
 export const orderCancel = async(id: string, user_email: string): Promise<boolean> => {
     try {
         const data = await firestore.collection('orders').doc(id)
-        const _deleted = data.delete()
         const get_data_order = (await data.get()).data()
         const get_data_product = (await firestore.collection('products').doc(get_data_order?.product_id).get()).data()
         const _update_data_product = await firestore.collection('products').doc(get_data_order?.product_id).update({
             stock: get_data_product?.stock + get_data_order?.jumlah
         })
+        const _deleted = data.delete()
 
         const get_user_data = (await firestore.collection('users').doc(user_email).get()).data()
         const _update_amount = await firestore.collection('users').doc(user_email).update({
