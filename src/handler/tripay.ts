@@ -17,7 +17,7 @@ export const callbackTripay = async(req: Request, res: Response): Promise<Respon
 
         if (json['status'] === 'PAID') {
             const _update_order = await firestore.collection('orders').doc(json['merchant_ref']).update({
-                status: 'PAID'
+                status: 'Preprocessing'
             })
             const _update_product = await firestore.collection('products').doc(get_order?.product_id).update({
                 stock: get_product?.stock - get_order?.jumlah

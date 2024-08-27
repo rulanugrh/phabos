@@ -1,8 +1,9 @@
 import { Request, Response } from "express";
 import { readEmail, readID } from "../middleware/jwt";
 import { OrderRequest } from "../typed/dto";
-import { orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister } from "../service/order";
+import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount } from "../service/order";
 import { requestTransaction } from "../util/tripay";
+import { checkUserBalance } from "../service/user";
 
 export const handlerOrderRegister = async(req: Request, res: Response): Promise<Response> => {
     const { product_id, via, jumlah } = req.body
@@ -16,24 +17,50 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
             product_id: product_id,
             via: via,
             jumlah: jumlah,
-            status: "process"
+            status: "UNPAID"
+        }
+
+        if (via === "ACCOUNT") {
+            const check = await checkUserBalance(user_email, request)
+            if (check !== "1") {
+                return res.status(400).json({
+                    code: 400,
+                    msg: check
+                })
+            }
         }
 
         const response = await orderRegister(request)
 
-        const { checkout_url, status } = await requestTransaction(response, user_email)
-        return res.status(201).json({
-            code: 201,
-            msg: 'success create order',
-            data: {
-                product_name: response.product_name,
-                product_price: response.price,
-                quantity: response.quantity,
-                total: response.nominal,
-                checkout_url: checkout_url,
-                status: status
-            },
-        })
+        if (via === "ACCOUNT") {
+            const verify = await orderWithAmount(user_email, response, request)
+            return res.status(201).json({
+                code: 201,
+                msg: 'success create order',
+                data: {
+                    product_name: response.product_name,
+                    product_price: response.price,
+                    quantity: response.quantity,
+                    total: response.nominal,
+                    checkout_url: '-',
+                    status: verify
+                },
+            })
+        } else {
+            const { checkout_url, status } = await requestTransaction(response, user_email)
+            return res.status(201).json({
+                code: 201,
+                msg: 'success create order',
+                data: {
+                    product_name: response.product_name,
+                    product_price: response.price,
+                    quantity: response.quantity,
+                    total: response.nominal,
+                    checkout_url: checkout_url,
+                    status: status
+                },
+            })
+        }
     } catch (error) {
         return res.status(400).json({
             msg: String(error),
@@ -106,6 +133,31 @@ export const handlerOrderCountingPemasukanHariIni = async(req: Request, res: Res
             code: 200,
             msg: 'total pemasukan hari ini',
             total_pemasukan: data
+        })
+    } catch (error) {
+        return res.status(400).json({
+            msg: String(error),
+            code: 400
+        })
+    }
+}
+
+export const handlerOrderCancel = async(req: Request, res: Response): Promise<Response> => {
+    const id = req.params.id
+    const token = req.headers.authorization as string
+    try {
+        const email = readEmail(token)
+        const verify = await orderCancel(id, email)
+        if (!verify) {
+            return res.status(400).json({
+                code: 400,
+                msg: 'something weird'
+            })
+        }
+        
+        return res.status(200).json({
+            code: 200,
+            msg: 'success canceling order'
         })
     } catch (error) {
         return res.status(400).json({

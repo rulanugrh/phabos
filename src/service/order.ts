@@ -39,6 +39,7 @@ export const orderRegister = async(req: OrderRequest): Promise<ResponseCreateOrd
 
         return response
     } catch (error) {
+        console.log(error)
         if (error instanceof FirebaseFirestoreError) {
             throw new Error(error.message)
         }
@@ -110,6 +111,60 @@ export const orderCountingPemasukanTotal = async(): Promise<number> => {
             throw new Error(error.message)
         }
 
+        throw new Error('Internal Server Error')
+    }
+}
+
+export const orderCancel = async(id: string, user_email: string): Promise<boolean> => {
+    try {
+        const data = await firestore.collection('orders').doc(id)
+        const _deleted = data.delete()
+        const get_data_order = (await data.get()).data()
+        const get_data_product = (await firestore.collection('products').doc(get_data_order?.product_id).get()).data()
+        const _update_data_product = await firestore.collection('products').doc(get_data_order?.product_id).update({
+            stock: get_data_product?.stock + get_data_order?.jumlah
+        })
+
+        const get_user_data = (await firestore.collection('users').doc(user_email).get()).data()
+        const _update_amount = await firestore.collection('users').doc(user_email).update({
+            amount: get_user_data?.amount + get_data_order?.total
+        })
+
+        return true
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        console.log(error)
+        throw new Error('Internal Server Error')
+    }
+}
+
+export const orderWithAmount = async(email: string, res: ResponseCreateOrder, req: OrderRequest): Promise<string> => {
+    try {
+        const get_user_data = (await firestore.collection('users').doc(email).get()).data()
+        const _update = await firestore.collection('users').doc(email).update({
+            amount: get_user_data?.amount - res.nominal
+        })
+
+        const _update_status = await firestore.collection('orders').doc(res.id).update({
+            status: 'Preprocessing'
+        })
+        const get_product_data = (await firestore.collection('products').doc(req.product_id).get()).data()
+        const _update_stock = await firestore.collection('products').doc(req.product_id).update({
+            stock: get_product_data?.stock - req.jumlah
+        })
+
+        const get_order = (await firestore.collection('orders').doc(res.id).get()).data()
+
+        return get_order?.status as string
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        console.log(error)
         throw new Error('Internal Server Error')
     }
 }

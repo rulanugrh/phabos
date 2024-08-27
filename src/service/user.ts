@@ -1,6 +1,6 @@
 import { firestore } from "../config/firebase";
 import { GetUser, ResponseCreateUser, ResponseLogin } from "../typed/dao";
-import { UserLogin, UserRegister } from "../typed/dto";
+import { OrderRequest, UserLogin, UserRegister } from "../typed/dto";
 import { v4 as uuid } from 'uuid';
 import bcrypt from "bcrypt"
 import { FirebaseFirestoreError } from "firebase-admin/firestore";
@@ -86,6 +86,27 @@ export const userCount = async(): Promise<number> => {
     try {
         const data = await firestore.collection('users').count().get()
         return data.data().count
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}
+
+export const checkUserBalance = async (email: string, req: OrderRequest): Promise<string> => {
+    try {
+        const get_user_data = (await firestore.collection('users').doc(email).get()).data()
+        const get_product = (await firestore.collection('products').doc(req.product_id).get()).data()
+        const price = await get_product?.price * req.jumlah
+        if (get_user_data?.amount === 0 || Number.isNaN(get_user_data?.amount)) {
+            return "Uangmu saat tidak ada, bernilai: " + get_user_data?.amount
+        } else if (get_user_data?.amount < price) {
+            return "Sorry, uang di akunmu tidak mencukupi, kamu hanya memiliki: " + get_user_data?.amount
+        }
+
+        return "1"
     } catch (error) {
         if (error instanceof FirebaseFirestoreError) {
             throw new Error(error.message)
