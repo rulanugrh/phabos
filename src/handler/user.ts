@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { UserLogin, UserRegister } from "../typed/dto";
-import { userCount, userGetMe, userLogin, userRegister } from "../service/user";
+import { userCount, userGetMe, userLogin, userRegister, userUpdatePassword } from "../service/user";
 import bcrypt from 'bcrypt';
 import { generateToken, PayloadToken, readEmail } from "../middleware/jwt";
 
@@ -95,6 +95,7 @@ export const handlerGetMe = async(req: Request, res: Response): Promise<Response
         })
     }
 }
+
 export const handlerUserCount = async(req: Request, res: Response): Promise<Response> => {
     try {
         const data = await userCount()
@@ -102,6 +103,31 @@ export const handlerUserCount = async(req: Request, res: Response): Promise<Resp
             code: 200,
             msg: 'total user active',
             total_user: data
+        })
+    } catch (error) {
+        return res.status(400).json({
+            msg: String(error),
+            code: 400
+        })
+    }
+}
+
+export const handlerUserUpdatePassword = async(req: Request, res: Response): Promise<Response> => {
+    const token = req.headers.authorization as string
+    const { password } = req.body
+    try {
+        const user_email = readEmail(token)
+        const verify = await userUpdatePassword(user_email, password)
+        if (!verify) {
+            return res.status(404).json({
+                code: 404,
+                msg: 'sorry data with this email not found'
+            })
+        }
+
+        return res.status(200).json({
+            code: 200,
+            msg: 'success update password'
         })
     } catch (error) {
         return res.status(400).json({

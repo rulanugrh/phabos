@@ -82,6 +82,23 @@ export const userGetMe = async(email: string): Promise<GetUser> => {
     }
 }
 
+export const userUpdatePassword = async(email: string, password: string): Promise<boolean> => {
+    try {
+        const hashPassword: string = await bcrypt.hash(password, 14)
+        const _data = await firestore.collection('users').doc(email).update({
+            password: hashPassword
+        })
+
+        return true
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+        
+        throw new Error('Internal Server Error')
+    }
+}
+
 export const userCount = async(): Promise<number> => {
     try {
         const data = await firestore.collection('users').count().get()
