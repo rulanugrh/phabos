@@ -38,12 +38,11 @@ export const siteAdmin = async(req: Request, res: Response, next: NextFunction) 
         })
     }
 
-    const { role, email } = jwt.verify(token, process.env.APP_SECRET as string) as {
-        role: string
+    const { email } = jwt.verify(token, process.env.APP_SECRET as string) as {
         email: string
     }
 
-    if (role !== process.env.ADMIN_ROLE && email !== process.env.ADMIN_EMAIL) {
+    if (email !== process.env.ADMIN_EMAIL) {
         return res.status(403).json({
             code: 403,
             msg: 'this page forbidden, youre role not support'
