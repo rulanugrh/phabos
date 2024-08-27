@@ -173,3 +173,23 @@ export const productCount = async(): Promise<number> => {
         throw new Error('Internal Server Error')
     }
 }
+
+export const productStock = async(id: string, total_request: number): Promise<string> => {
+    try {
+        const data = (await firestore.collection('products').doc(id).get()).data()
+
+        if (data?.stock < total_request) {
+            return "Maaf untuk saat ini produk kita hanya tersedia " + data?.stock
+        } else if (data?.stock === 0 || Number.isNaN(data?.stock) || data?.stock < 0) {
+            return "Maaf kita kehabisan stock produk"
+        }
+
+        return "1"
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}

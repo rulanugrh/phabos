@@ -4,6 +4,7 @@ import { OrderRequest } from "../typed/dto";
 import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount } from "../service/order";
 import { requestTransaction } from "../util/tripay";
 import { checkUserBalance } from "../service/user";
+import { productStock } from "../service/product";
 
 export const handlerOrderRegister = async(req: Request, res: Response): Promise<Response> => {
     const { product_id, via, jumlah } = req.body
@@ -18,6 +19,14 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
             via: via,
             jumlah: jumlah,
             status: "UNPAID"
+        }
+
+        const check_stock = await productStock(product_id, jumlah)
+        if (check_stock !== "1") {
+            return res.status(400).json({
+                code: 400,
+                msg: check_stock
+            })
         }
 
         if (via === "ACCOUNT") {
