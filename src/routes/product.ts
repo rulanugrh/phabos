@@ -1,11 +1,12 @@
 import express, { Router } from "express";
 import { handlerProductCount, handlerProductDelete, handlerProductGetAll, handlerProductGetByID, handlerProductGetByName, handlerProductRegister, handlerProductUpdate } from "../handler/product";
+import { siteAdmin, verify } from "../middleware/verify";
 
 export const routerProduct: Router = express.Router()
-routerProduct.post('/register', handlerProductRegister)
-routerProduct.put('/update/:id', handlerProductUpdate)
-routerProduct.delete('/delete/:id', handlerProductDelete)
-routerProduct.get('/', handlerProductGetAll)
-routerProduct.get('/find/:id', handlerProductGetByID)
-routerProduct.get('/get', handlerProductGetByName)
-routerProduct.get('/count', handlerProductCount)
+routerProduct.post('/register', siteAdmin, handlerProductRegister)
+routerProduct.put('/update/:id', siteAdmin, handlerProductUpdate)
+routerProduct.delete('/delete/:id', siteAdmin, handlerProductDelete)
+routerProduct.get('/', verify, handlerProductGetAll)
+routerProduct.get('/find/:id', verify, handlerProductGetByID)
+routerProduct.get('/get', verify, handlerProductGetByName)
+routerProduct.get('/count', siteAdmin, handlerProductCount)
