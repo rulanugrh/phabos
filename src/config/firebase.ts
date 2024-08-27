@@ -4,7 +4,7 @@ import { getFirestore  } from "firebase-admin/firestore"
 import { credential } from "firebase-admin";
 dotenv.config()
 
-const fileKey = require('../../data/key.json')
+const fileKey = require('../../config/key.json')
 
 initializeApp({
     credential: credential.cert(fileKey)

@@ -111,15 +111,15 @@ export const handlerOrderCountingPemasukanTotal = async(req: Request, res: Respo
         if (data === 0) {
             return res.status(200).json({
                 code: 200,
-                msg: 'maaf tidak ada pemasukan',
-                data: 0
+                msg: 'sorry no income',
+                total_income: 0
             })
         }
 
         return res.status(200).json({
             code: 200,
-            msg: 'success get pemasukan',
-            total_pemasukan: data
+            msg: 'income today',
+            total_income: data
         })
     } catch (error) {
         return res.status(400).json({
@@ -135,15 +135,15 @@ export const handlerOrderCountingPemasukanHariIni = async(req: Request, res: Res
         if (data === 0) {
             return res.status(200).json({
                 code: 200,
-                msg: 'maaf tidak ada pemasukan hari ini',
-                data: 0
+                msg: 'sorry no income today',
+                total_income: 0
             })
         }
 
         return res.status(200).json({
             code: 200,
-            msg: 'total pemasukan hari ini',
-            total_pemasukan: data
+            msg: 'income total',
+            total_income: data
         })
     } catch (error) {
         return res.status(400).json({

@@ -26,7 +26,6 @@ export type GetUser = {
     _id: string;
     name: string;
     email: string;
-    role: string;
     amount?: number;
 }
 
@@ -38,7 +37,6 @@ export type ResponseCreateUser = {
 export type ResponseLogin = {
     _id: string;
     email: string;
-    role: string;
     amount?: number;
     name: string;
     password: string;

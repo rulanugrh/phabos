@@ -44,7 +44,6 @@ export const userLogin = async(request: UserLogin): Promise<ResponseLogin> => {
         const response: ResponseLogin = {
             name: data?.name,
             email: data?.email,
-            role: data?.role,
             _id: data?._id,
             amount: data?.amount,
             password: data?.password
@@ -66,7 +65,6 @@ export const userGetMe = async(email: string): Promise<GetUser> => {
         const response: GetUser = {
             name: data?.name,
             email: data?.email,
-            role: data?.role,
             amount: data?.amount,
             _id: data?._id
         }

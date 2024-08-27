@@ -1,0 +1,31 @@
+# Type: Docker Compose
+# Digunakan untuk up all service yang dibutuhkan
+# Semua proses installasi diperlukan environment
+# Setting Environtment di .env / .env.prod
+
+version: "3.9"
+services:
+
+  app-backend:
+    container_name: app-backend
+
+    # Type: Build Dockerfile
+    # EXPOSE_PORT: Environtment Exposed App Port
+    # Build dockerfile dengan path yang telah ditentukan
+    # Path berasal dari context yang di konfigurasi
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Type: Environment File
+    env_file: ".env"
+    ports:
+      - ${APP_PORT}:3000
+    # Type: Depending Service
+    # Depend database untuk proses ekskusi query
+    networks:
+      - apps
+
+networks:
+  apps:
+    driver: bridge
