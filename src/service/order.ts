@@ -1,5 +1,5 @@
 import { firestore } from "../config/firebase";
-import { ListPembelian, ResponseCreateOrder } from "../typed/dao";
+import { GetAllOrder, ListPembelian, ResponseCreateOrder } from "../typed/dao";
 import { OrderRequest } from "../typed/dto";
 import { FirebaseFirestoreError } from "firebase-admin/firestore";
 import { v4 as uuid } from 'uuid';
@@ -39,7 +39,7 @@ export const orderRegister = async(req: OrderRequest): Promise<ResponseCreateOrd
 
         return response
     } catch (error) {
-        console.log(error)
+        
         if (error instanceof FirebaseFirestoreError) {
             throw new Error(error.message)
         }
@@ -123,12 +123,12 @@ export const orderCancel = async(id: string, user_email: string): Promise<boolea
         const _update_data_product = await firestore.collection('products').doc(get_data_order?.product_id).update({
             stock: get_data_product?.stock + get_data_order?.jumlah
         })
-        const _deleted = data.delete()
-
+        
         const get_user_data = (await firestore.collection('users').doc(user_email).get()).data()
         const _update_amount = await firestore.collection('users').doc(user_email).update({
             amount: get_user_data?.amount + get_data_order?.total
         })
+        const _deleted = data.delete()
 
         return true
     } catch (error) {
@@ -136,7 +136,6 @@ export const orderCancel = async(id: string, user_email: string): Promise<boolea
             throw new Error(error.message)
         }
 
-        console.log(error)
         throw new Error('Internal Server Error')
     }
 }
@@ -164,7 +163,65 @@ export const orderWithAmount = async(email: string, res: ResponseCreateOrder, re
             throw new Error(error.message)
         }
 
-        console.log(error)
+        throw new Error('Internal Server Error')
+    }
+}
+
+export const orderUpdateCheckoutURL = async(id: string, url: string): Promise<any> => {
+    try {
+        return await firestore.collection('orders').doc(id).update({
+            checkout_url: url
+        })
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}
+
+export const orderGetAllForAdmin = async(): Promise<GetAllOrder[]> => {
+    try {
+        const snapshot = await firestore.collection('orders').get()
+        const result = snapshot.docs.map((doc) => {
+            const dt = doc.data()
+            const result: GetAllOrder = {
+                id: doc.id,
+                product_name: dt.product_name,
+                category: dt.product_category,
+                via: dt.via,
+                status: dt.status,
+                total: dt.total,
+                tanggal: dt.tanggal_pesanan,
+                process: dt.process,
+                checkout_url: dt.checkout_url,
+                user_id: dt.user_id
+            }
+
+            return result
+        })
+
+        return result
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}
+
+export const orderUpdateForAccept = async(id: string): Promise<any> => {
+    try {
+        return await firestore.collection('orders').doc(id).update({
+            status: 'accept'
+        })
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
         throw new Error('Internal Server Error')
     }
 }

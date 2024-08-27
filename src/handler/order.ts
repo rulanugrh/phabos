@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { readEmail, readID } from "../middleware/jwt";
 import { OrderRequest } from "../typed/dto";
-import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount } from "../service/order";
+import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept } from "../service/order";
 import { requestTransaction } from "../util/tripay";
 import { checkUserBalance } from "../service/user";
 import { productStock } from "../service/product";
@@ -43,6 +43,7 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
 
         if (via === "ACCOUNT") {
             const verify = await orderWithAmount(user_email, response, request)
+            await orderUpdateCheckoutURL(response.id, '-')
             return res.status(201).json({
                 code: 201,
                 msg: 'success create order',
@@ -57,6 +58,7 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
             })
         } else {
             const { checkout_url, status } = await requestTransaction(response, user_email)
+            await orderUpdateCheckoutURL(response.id, checkout_url)
             return res.status(201).json({
                 code: 201,
                 msg: 'success create order',
@@ -167,6 +169,45 @@ export const handlerOrderCancel = async(req: Request, res: Response): Promise<Re
         return res.status(200).json({
             code: 200,
             msg: 'success canceling order'
+        })
+    } catch (error) {
+        return res.status(400).json({
+            msg: String(error),
+            code: 400
+        })
+    }
+}
+
+export const handlerOrderGetAllForAdmin = async(req: Request, res: Response): Promise<Response> => {
+    try {
+        const data = await orderGetAllForAdmin()
+        if (!data || data.length === 0) {
+            return res.status(200).json({
+                code: 200,
+                msg: 'Maaf belum ada order sama sekali'
+            })
+        }
+
+        return res.status(200).json({
+            code: 200,
+            msg: 'success get all list order',
+            data: data
+        })
+    } catch (error) {
+        return res.status(400).json({
+            msg: String(error),
+            code: 400
+        })
+    }
+}
+
+export const handlerOrderUpdateAccept = async(req: Request, res: Response): Promise<Response> => {
+    const id = req.params.id
+    try {
+        await orderUpdateForAccept(id)
+        return res.status(200).json({
+            code: 200,
+            msg: 'success update status accept for this id'
         })
     } catch (error) {
         return res.status(400).json({
