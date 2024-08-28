@@ -5,7 +5,7 @@ import { firestore } from "../config/firebase";
 import dotenv from "dotenv"
 dotenv.config()
 
-export const requestTransaction = async(request: ResponseCreateOrder, user_email: string): Promise<{checkout_url: string, status: string}> => {
+export const requestTransaction = async(request: ResponseCreateOrder, user_email: string, phone_number: string): Promise<{checkout_url: string, status: string}> => {
     try {
         const userData = (await firestore.collection('users').doc(user_email).get()).data()
         const expiry = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
@@ -20,6 +20,7 @@ export const requestTransaction = async(request: ResponseCreateOrder, user_email
             'amount': request.nominal,
             'customer_name': userData?.name as string,
             'customer_email': user_email,
+            'customer_phone': phone_number,
             'order_items': [
                 {
                     'name': request.product_name,
@@ -54,7 +55,7 @@ export const requestTransaction = async(request: ResponseCreateOrder, user_email
     }
 }
 
-export const requestTransactionTopup = async(request: ResponseTopup, user_email: string): Promise<{checkout_url: string, status: string}> => {
+export const requestTransactionTopup = async(request: ResponseTopup, user_email: string, phone_number: string): Promise<{checkout_url: string, status: string}> => {
     try {
         const userData = (await firestore.collection('users').doc(user_email).get()).data()
         const expiry = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
@@ -69,6 +70,7 @@ export const requestTransactionTopup = async(request: ResponseTopup, user_email:
             'amount': request.balance,
             'customer_name': userData?.name as string,
             'customer_email': user_email,
+            'customer_phone': phone_number,
             'order_items': [
                 {
                     'name': 'TopUp',
@@ -90,6 +92,7 @@ export const requestTransactionTopup = async(request: ResponseTopup, user_email:
             }
         })
 
+        console.log(response)
         const checkout_url = response.data.data.checkout_url
         const status = response.data.data.status
         return { checkout_url, status }

@@ -27,6 +27,7 @@ export type GetUser = {
     name: string;
     email: string;
     amount?: number;
+    phonenumber: string;
 }
 
 export type ResponseCreateUser = {
@@ -40,6 +41,7 @@ export type ResponseLogin = {
     amount?: number;
     name: string;
     password: string;
+    phonenumber: string;
 }
 
 export type ResponseCreateOrder = {

@@ -3,6 +3,7 @@ export type UserRegister = {
     name: string;
     email: string;
     password: string;
+    phonenumber: string;
     amount?: number;
 }
 

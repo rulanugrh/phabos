@@ -14,6 +14,7 @@ export const userRegister = async(request: UserRegister): Promise<ResponseCreate
             email: request.email,
             password: hashedPassword,
             amount: 0,
+            phonenumber: request.phonenumber
         }
 
         const _res = await firestore.collection('users').doc(request.email).set(data)
@@ -46,7 +47,8 @@ export const userLogin = async(request: UserLogin): Promise<ResponseLogin> => {
             email: data?.email,
             _id: data?._id,
             amount: data?.amount,
-            password: data?.password
+            password: data?.password,
+            phonenumber: data?.phonenumber
         }
 
         return response
@@ -66,7 +68,8 @@ export const userGetMe = async(email: string): Promise<GetUser> => {
             name: data?.name,
             email: data?.email,
             amount: data?.amount,
-            _id: data?._id
+            _id: data?._id,
+            phonenumber: data?.phonenumber
         }
 
         return response

@@ -5,12 +5,13 @@ import bcrypt from 'bcrypt';
 import { generateToken, PayloadToken, readEmail } from "../middleware/jwt";
 
 export const handlerUserRegister = async(req: Request, res: Response): Promise<Response> => {
-    const { name, email, password } = req.body
+    const { name, email, password, phone_number } = req.body
     try {
         const request: UserRegister = {
             name: name,
             email: email,
             password: password,
+            phonenumber: phone_number
         }
 
         const response = await userRegister(request)
@@ -49,6 +50,7 @@ export const handlerUserLogin = async(req: Request, res: Response): Promise<Resp
             id: data._id,
             name: data.name,
             email: data.email,
+            phone_number: data.phonenumber
         }
 
         const token = generateToken(payload)

@@ -111,3 +111,16 @@ export const topupGetAllByAdmin = async(): Promise<ResponseTopup[]> => {
         throw new Error('Internal Server Error')
     }
 }
+
+export const topupDelete = async(id: string): Promise<any> => {
+    try {
+        return await firestore.collection('topups').doc(id).delete()
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        console.log(error)
+        throw new Error('Internal Server Error')  
+    }
+}

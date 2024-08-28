@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { readEmail, readID } from "../middleware/jwt";
+import { readEmail, readID, readPhoneNumber } from "../middleware/jwt";
 import { OrderRequest } from "../typed/dto";
 import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete } from "../service/order";
 import { requestTransaction } from "../util/tripay";
@@ -13,6 +13,7 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
     try {
         const user_id = readID(token)
         const user_email = readEmail(token)
+        const phone_number = readPhoneNumber(token)
         const request: OrderRequest = {
             user_id: user_id,
             product_id: product_id,
@@ -56,7 +57,7 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
                 },
             })
         } else {
-            const { checkout_url, status } = await requestTransaction(response, user_email)
+            const { checkout_url, status } = await requestTransaction(response, user_email, phone_number)
             if (!checkout_url)  {
                 await orderDelete(response.id)
                 return res.status(504).json({

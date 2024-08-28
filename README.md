@@ -81,7 +81,8 @@ POST /api/auth/register
 {
     "name": "string, required",
     "email": "string, required",
-    "password": "string, min 8"
+    "password": "string, min 8",
+    "phone_number": "string, required"
 }
 ```
 

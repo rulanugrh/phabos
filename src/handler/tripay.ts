@@ -15,7 +15,6 @@ export const callbackTripay = async(req: Request, res: Response): Promise<Respon
         
         if (json.merchant_ref !== null) {
             const get_order = (await firestore.collection('orders').doc(json['merchant_ref']).get()).data()
-            console.log(get_order)
             if (get_order !== undefined) {
                 const get_product = (await firestore.collection('products').doc(get_order?.product_id).get()).data()
                 if (json.status === 'PAID') {

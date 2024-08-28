@@ -1,7 +1,7 @@
 import { Request, Response } from "express"
 import { TopUp } from "../typed/dto"
-import { readEmail } from "../middleware/jwt"
-import { topupDetail, topupGetAllByAdmin, topupHistory, topupRegister } from "../service/topup"
+import { readEmail, readPhoneNumber } from "../middleware/jwt"
+import { topupDelete, topupDetail, topupGetAllByAdmin, topupHistory, topupRegister } from "../service/topup"
 import { requestTransactionTopup } from "../util/tripay"
 
 
@@ -10,6 +10,7 @@ export const handlerTopupRegister = async(req: Request, res: Response): Promise<
     const token = req.headers.authorization as string
     try {
         const email = readEmail(token)
+        const phone_number = readPhoneNumber(token)
         const request: TopUp = {
             via: via,
             balance: balance,
@@ -17,7 +18,15 @@ export const handlerTopupRegister = async(req: Request, res: Response): Promise<
         }
 
         const data = await topupRegister(request)
-        const { checkout_url, status } = await requestTransactionTopup(data, email)
+        const { checkout_url, status } = await requestTransactionTopup(data, email, phone_number)
+        if (!checkout_url) {
+            await topupDelete(data.id)
+            return res.status(504).json({
+                code: 504,
+                msg: 'Sorry the payment system is having problems. Please re-request again'
+            })
+        }
+
         return res.status(201).json({
             code: 201,
             msg: 'success topup, go to pay it',
