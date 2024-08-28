@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { readEmail, readID } from "../middleware/jwt";
 import { OrderRequest } from "../typed/dto";
-import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept } from "../service/order";
+import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete } from "../service/order";
 import { requestTransaction } from "../util/tripay";
 import { checkUserBalance } from "../service/user";
 import { productStock } from '../service/product';
@@ -57,6 +57,9 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
             })
         } else {
             const { checkout_url, status } = await requestTransaction(response, user_email)
+            if (!checkout_url)  {
+                await orderDelete(response.id)
+            }
             await orderUpdateCheckoutURL(response.id, checkout_url)
             return res.status(201).json({
                 code: 201,

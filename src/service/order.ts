@@ -236,3 +236,15 @@ export const orderUpdateForAccept = async(id: string): Promise<any> => {
         throw new Error('Internal Server Error')
     }
 }
+
+export const orderDelete = async(id: string): Promise<any> => {
+    try {
+        return await firestore.collection('orders').doc(id).delete()
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}
