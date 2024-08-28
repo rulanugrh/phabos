@@ -39,7 +39,6 @@ export const orderRegister = async(req: OrderRequest): Promise<ResponseCreateOrd
 
         return response
     } catch (error) {
-        
         if (error instanceof FirebaseFirestoreError) {
             throw new Error(error.message)
         }
@@ -86,6 +85,12 @@ export const orderCountingPemasukanHariIni = async(): Promise<number> => {
             num += dt?.total as number
         })
 
+        const snapshot_topup = await firestore.collection('topups').where("status", '==', 'PAID').where("tanggal", "==", new Date().toDateString()).get()
+        const _res = snapshot_topup.docs.map((doc) => {
+            const dt = doc.data()
+            num += dt?.balance as number
+        })
+
         return num
     } catch (error) {
         if (error instanceof FirebaseFirestoreError) {
@@ -105,6 +110,12 @@ export const orderCountingPemasukanTotal = async(): Promise<number> => {
             num += dt?.total as number
         })
 
+        const snapshot_topup = await firestore.collection('topups').where("status", '==', 'PAID').get()
+        const _res = snapshot_topup.docs.map((doc) => {
+            const dt = doc.data()
+            num += dt?.balance as number
+        })
+        
         return num
     } catch (error) {
         if (error instanceof FirebaseFirestoreError) {

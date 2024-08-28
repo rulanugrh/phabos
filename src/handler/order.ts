@@ -4,7 +4,7 @@ import { OrderRequest } from "../typed/dto";
 import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept } from "../service/order";
 import { requestTransaction } from "../util/tripay";
 import { checkUserBalance } from "../service/user";
-import { productStock } from "../service/product";
+import { productStock } from '../service/product';
 
 export const handlerOrderRegister = async(req: Request, res: Response): Promise<Response> => {
     const { product_id, via, jumlah } = req.body
@@ -40,7 +40,6 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
         }
 
         const response = await orderRegister(request)
-
         if (via === "ACCOUNT") {
             const verify = await orderWithAmount(user_email, response, request)
             await orderUpdateCheckoutURL(response.id, '-')

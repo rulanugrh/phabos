@@ -101,7 +101,6 @@ export const handlerProductUpdate = async(req: Request, res: Response): Promise<
             data: data
         })
     } catch (error) {
-        console.log(error)
         return res.status(400).json({
             msg: String(error),
             code: 400

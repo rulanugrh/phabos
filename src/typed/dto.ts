@@ -29,11 +29,11 @@ export type OrderRequest = {
 }
 
 export type TopUp = {
-    user_id: string;
+    user_email: string;
     balance: number;
     via: string;
-    tanggal: string;
-    status: string;
+    tanggal?: string;
+    status?: string;
 }
 
 export type ProductUpdate = {

@@ -55,7 +55,17 @@ export type ResponseCreateOrder = {
     nominal: number;
 }
 
-export type RiwayatTopup = {
+export type ResponseTopup = {
+    id: string;
+    user_email: string;
+    balance: number;
+    via: string;
+    tanggal: string;
+    status: string;
+}
+
+export type ResponseGetTopup = {
+    id: string;
     balance: number;
     via: string;
     tanggal: string;

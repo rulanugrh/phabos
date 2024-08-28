@@ -3,12 +3,14 @@ import { routerAuth } from "./auth";
 import { routerProduct } from "./product";
 import { routerOrder } from "./order";
 import { routerTripay } from "./tripay";
+import { routerTopup } from "./topup";
 
 const routes: Array<[string, Router]> = [
     ["auth", routerAuth],
     ["product", routerProduct],
     ["order", routerOrder],
-    ["tripay", routerTripay]
+    ["tripay", routerTripay],
+    ["topup", routerTopup]
 ]
 
 export const Routes = (app: Application) => {

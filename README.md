@@ -49,6 +49,7 @@ This contain all documentation about API default port in `http://ip:3000` :
     - [Order Get Total Income](#order-total-income)
     - [Order Get Today Income](#order-today-income)
     - [Order Accept](#accept-order)
+    - [Get All Topup](#get-all-topup-by-admin)
 - [Member / User](#member--user)
     - [GetMe](#get-user)
     - [Update Password](#update-password)
@@ -59,6 +60,9 @@ This contain all documentation about API default port in `http://ip:3000` :
     - [History Order](#get-all-order-by-userid)
     - [Get Order By ID](#get-order-by-id)
     - [Cancel Order](#cancel-order-by-id)
+    - [Topup Request](#topup-register)
+    - [Topup Get All](#get-all-order-by-userid)
+    - [Topup Get By ID](#get-topup-by-id)
 
 ### Public
 
@@ -355,6 +359,32 @@ PUT /api/order/update/status/:id
     "msg": "string"
 }
 ```
+#### Get All Topup By Admin
+```http
+GET /api/topup/admin/get
+```
+- Header:
+  - Content-Type: `application/json`
+  - Accept: `application/json`
+  - Authorization: `token`
+- Response:
+
+```json
+{
+    "code": "number",
+    "msg": "string",
+    "data": [
+      {  
+          "id": "string",
+          "via": "string",
+          "balance": "string",
+          "tanggal": "string",
+          "status": "string",
+          "user_name": "string"
+      }
+    ]
+}
+```
 
 ### Member / User
 Required `Authorization` header you must login first if you want access this page
@@ -406,7 +436,7 @@ PUT /api/auth/update/password
 }
 ```
 
-### Get All Product
+#### Get All Product
 ```http
 GET /api/product/
 ```
@@ -434,7 +464,7 @@ GET /api/product/
     ] 
 }
 ```
-### Get Product By ID
+#### Get Product By ID
 ```http
 GET /api/product/find/:id
 ```
@@ -461,7 +491,7 @@ GET /api/product/find/:id
     }
 }
 ```
-### Get Product By Name
+#### Get Product By Name
 ```http
 GET /api/product/get?name=string&category=string
 ```
@@ -491,7 +521,7 @@ GET /api/product/get?name=string&category=string
     ]
 }
 ```
-### Create Order Request
+#### Create Order Request
 ```http
 POST /api/order/register
 ```
@@ -523,7 +553,7 @@ POST /api/order/register
     }
 }
 ```
-### Get All Order By UserID
+#### Get All Order By UserID
 ```http
 GET /api/order/history
 ```
@@ -551,7 +581,7 @@ GET /api/order/history
     ]
 }
 ```
-### Get Order By ID
+#### Get Order By ID
 ```http
 GET /api/order/find/:id
 ```
@@ -580,7 +610,7 @@ GET /api/order/find/:id
 }
 ```
 
-### Cancel Order By ID
+#### Cancel Order By ID
 ```http
 DELETE /api/order/cancel/:id
 ```
@@ -596,6 +626,87 @@ DELETE /api/order/cancel/:id
 {
     "code": "number",
     "msg": "string"
+}
+```
+#### Get Topup By ID
+```http
+GET /api/topup/find/:id
+```
+- Header:
+  - Content-Type: `application/json`
+  - Accept: `application/json`
+  - Authorization: `token`
+- Paremeter:
+  - id: `string`
+- Response:
+
+```json
+{
+    "code": "number",
+    "msg": "string",
+    "data": {
+        "id": "string",
+        "via": "string",
+        "balance": "string",
+        "tanggal": "string",
+        "status": "string"
+    }
+}
+```
+#### History Topup
+```http
+GET /api/topup/history
+```
+- Header:
+  - Content-Type: `application/json`
+  - Accept: `application/json`
+  - Authorization: `token`
+- Response:
+
+```json
+{
+    "code": "number",
+    "msg": "string",
+    "data": [
+      {  
+          "id": "string",
+          "via": "string",
+          "balance": "string",
+          "tanggal": "string",
+          "status": "string"
+      }
+    ]
+}
+```
+#### Topup Register
+```http
+POST /api/topup/register
+```
+- Header:
+  - Content-Type: `application/json`
+  - Accept: `application/json`
+  - Authorization: `token`
+
+- Body: 
+```json
+{
+    "balance": "number",
+    "via": "string"
+}
+```
+- Response:
+
+```json
+{
+    "code": "number",
+    "msg": "string",
+    "data": {
+      "id": "string",
+      "via": "string",
+      "balance": "string",
+      "checkout_url": "string",
+      "status": "string"
+    }
 }
 ```
 

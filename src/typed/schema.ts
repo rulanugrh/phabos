@@ -73,3 +73,14 @@ export const schemaOrderRegister = z.object({
         message: 'must be string value'
     })
 })
+
+export const schemaTopUp = z.object({
+    balance: z.number({
+        message: 'must be number format'
+    }).min(10000, {
+        message: 'minimum is 1'
+    }),
+    via: z.string({
+        message: 'must be string value'
+    })
+})
