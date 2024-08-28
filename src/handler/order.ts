@@ -59,6 +59,10 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
             const { checkout_url, status } = await requestTransaction(response, user_email)
             if (!checkout_url)  {
                 await orderDelete(response.id)
+                return res.status(504).json({
+                    code: 504,
+                    msg: 'Sorry the payment system is having problems. Please re-request again'
+                })
             }
             await orderUpdateCheckoutURL(response.id, checkout_url)
             return res.status(201).json({
