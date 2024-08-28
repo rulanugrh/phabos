@@ -132,3 +132,16 @@ export const checkUserBalance = async (email: string, req: OrderRequest): Promis
         throw new Error('Internal Server Error')
     }
 }
+
+export const userGetPhoneNumber = async(email: string): Promise<string> => {
+    try {
+        const data = (await firestore.collection('users').doc(email).get()).data()
+        return data?.phonenumber
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}

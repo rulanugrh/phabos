@@ -50,7 +50,6 @@ export const handlerUserLogin = async(req: Request, res: Response): Promise<Resp
             id: data._id,
             name: data.name,
             email: data.email,
-            phone_number: data.phonenumber
         }
 
         const token = generateToken(payload)

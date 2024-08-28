@@ -51,7 +51,7 @@ export const requestTransaction = async(request: ResponseCreateOrder, user_email
             throw new Error(error.message)
         }
 
-        throw new Error('Internal Server Error')
+        throw new Error('Sorry something error on your request to Tripay')
     }
 }
 
@@ -102,6 +102,6 @@ export const requestTransactionTopup = async(request: ResponseTopup, user_email:
             throw new Error(error.message)
         }
 
-        throw new Error('Internal Server Error')
+        throw new Error('Sorry something error on your request to Tripay')
     }
 }

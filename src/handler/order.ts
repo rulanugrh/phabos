@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { readEmail, readID, readPhoneNumber } from "../middleware/jwt";
+import { readEmail, readID } from "../middleware/jwt";
 import { OrderRequest } from "../typed/dto";
 import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete } from "../service/order";
 import { requestTransaction } from "../util/tripay";
-import { checkUserBalance } from "../service/user";
+import { checkUserBalance, userGetPhoneNumber } from "../service/user";
 import { productStock } from '../service/product';
 
 export const handlerOrderRegister = async(req: Request, res: Response): Promise<Response> => {
@@ -13,7 +13,7 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
     try {
         const user_id = readID(token)
         const user_email = readEmail(token)
-        const phone_number = readPhoneNumber(token)
+        const phone_number = await userGetPhoneNumber(user_email)
         const request: OrderRequest = {
             user_id: user_id,
             product_id: product_id,
