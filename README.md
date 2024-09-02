@@ -50,6 +50,7 @@ This contain all documentation about API default port in `http://ip:3000` :
     - [Order Get Today Income](#order-today-income)
     - [Order Accept](#accept-order)
     - [Get All Topup](#get-all-topup-by-admin)
+    - [Send Product](#send-product)
 - [Member / User](#member--user)
     - [GetMe](#get-user)
     - [Update Password](#update-password)
