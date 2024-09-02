@@ -44,3 +44,11 @@ export type ProductUpdate = {
     description?: string;
     process?: string;
 }
+
+
+export type SendProduct = {
+    account: string;
+    password: string;
+    expired: string;
+    rules: string;
+}

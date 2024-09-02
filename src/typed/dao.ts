@@ -91,3 +91,16 @@ export type ResponseGetProduct = {
     process: string;
     stock: number;
 }
+
+export type DetailOrder = {
+    product_account: string;
+    product_price: string;
+    product_expired: string;
+    product_rules: string;
+    product_password: string;
+    product_name: string;
+    via: string;
+    order_date: string;
+    order_status: string;
+
+}

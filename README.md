@@ -360,6 +360,33 @@ PUT /api/order/update/status/:id
     "msg": "string"
 }
 ```
+#### Send Product
+```http
+POST /api/order/send/product/:id
+```
+- Header:
+  - Content-Type: `application/json`
+  - Accept: `application/json`
+  - Authorization: `token`
+- Paremeter:
+  - id: `string` -> order id
+- Body:
+```json
+{
+    "expired": "string",
+    "account": "string",
+    "password": "string",
+    "rules": "string"
+}
+```
+- Response:
+
+```json
+{
+    "code": "number",
+    "msg": "string"
+}
+```
 #### Get All Topup By Admin
 ```http
 GET /api/topup/admin/get
@@ -599,14 +626,15 @@ GET /api/order/find/:id
     "code": "number",
     "msg": "string",
     "data": {
-        "id": "string",
         "via": "string",
-        "category": "string",
+        "order_date": "string",
+        "order_status": "string",
         "product_name": "string",
-        "tanggal": "string",
-        "status": "string",
-        "process": "string",
-        "total": "string",
+        "product_account": "string",
+        "product_price": "string",
+        "product_expired": "string",
+        "product_rules": "string",
+        "product_password": "string",
     }
 }
 ```

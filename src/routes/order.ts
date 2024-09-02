@@ -1,5 +1,5 @@
 import express, { Router } from "express";
-import { handlerListOrderByUid, handlerOrderCancel, handlerOrderCountingPemasukanHariIni, handlerOrderCountingPemasukanTotal, handlerOrderGetAllForAdmin, handlerOrderRegister, handlerOrderUpdateAccept } from "../handler/order";
+import { handlerListOrderByUid, handlerOrderCancel, handlerOrderCountingPemasukanHariIni, handlerOrderCountingPemasukanTotal, handlerOrderFindByID, handlerOrderGetAllForAdmin, handlerOrderRegister, handlerOrderSendProduct, handlerOrderUpdateAccept } from "../handler/order";
 import { siteAdmin, verify } from "../middleware/verify";
 import { validate } from "../middleware/validation";
 import { schemaOrderRegister } from "../typed/schema";
@@ -12,3 +12,5 @@ routerOrder.get('/income/today', siteAdmin, handlerOrderCountingPemasukanHariIni
 routerOrder.delete('/cancel/:id', verify, handlerOrderCancel)
 routerOrder.get('/admin/get', siteAdmin, handlerOrderGetAllForAdmin)
 routerOrder.put('/update/status/:id', siteAdmin, handlerOrderUpdateAccept)
+routerOrder.post('/send/product/:id', siteAdmin, handlerOrderSendProduct)
+routerOrder.get('/find/:id', verify, handlerOrderFindByID)

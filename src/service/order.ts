@@ -1,6 +1,6 @@
 import { firestore } from "../config/firebase";
-import { GetAllOrder, ListPembelian, ResponseCreateOrder } from "../typed/dao";
-import { OrderRequest } from "../typed/dto";
+import { DetailOrder, GetAllOrder, ListPembelian, ResponseCreateOrder } from "../typed/dao";
+import { OrderRequest, SendProduct } from "../typed/dto";
 import { FirebaseFirestoreError } from "firebase-admin/firestore";
 import { v4 as uuid } from 'uuid';
 
@@ -240,6 +240,52 @@ export const orderUpdateForAccept = async(id: string): Promise<any> => {
 export const orderDelete = async(id: string): Promise<any> => {
     try {
         return await firestore.collection('orders').doc(id).delete()
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}
+
+export const sendProduct = async(id: string, req: SendProduct): Promise<boolean> => {
+    try {
+        const data = await firestore.collection('orders').doc(id).update({
+            product_account: req.account,
+            product_expired: req.expired,
+            product_rules: req.rules,
+            product_password: req.password
+        })
+
+        if (!data) {
+            return false
+        }
+        return true
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
+    }
+}
+
+export const orderGetByID = async(id: string): Promise<DetailOrder> => {
+    try {
+        const data = (await firestore.collection('orders').doc(id).get()).data()
+        const response: DetailOrder = {
+            product_account: data?.product_account,
+            product_expired: data?.product_expired,
+            product_rules: data?.product_rules,
+            product_password: data?.product_password,
+            product_name: data?.product_name,
+            product_price: data?.product_price,
+            order_status: data?.status,
+            order_date: data?.tanggal_pesanan,
+            via: data?.via
+        }
+        return response
     } catch (error) {
         if (error instanceof FirebaseFirestoreError) {
             throw new Error(error.message)

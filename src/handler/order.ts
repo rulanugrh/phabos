@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { readEmail, readID } from "../middleware/jwt";
-import { OrderRequest } from "../typed/dto";
-import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete } from "../service/order";
+import { OrderRequest, SendProduct } from '../typed/dto';
+import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete, sendProduct, orderGetByID } from "../service/order";
 import { requestTransaction } from "../util/tripay";
 import { checkUserBalance, userGetPhoneNumber } from "../service/user";
 import { productStock } from '../service/product';
@@ -215,6 +215,61 @@ export const handlerOrderUpdateAccept = async(req: Request, res: Response): Prom
         return res.status(200).json({
             code: 200,
             msg: 'success update status accept for this id'
+        })
+    } catch (error) {
+        return res.status(400).json({
+            msg: String(error),
+            code: 400
+        })
+    }
+}
+
+export const handlerOrderSendProduct = async(req: Request, res: Response): Promise<Response> => {
+    const id = req.params.id
+    const { account, password, expired, rules } = req.body
+    try {
+        const request: SendProduct = {
+            account: account,
+            password: password,
+            expired: expired,
+            rules: rules
+        }
+
+        const data = await sendProduct(id, request)
+        if (!data) {
+            return res.status(400).json({
+                code: 400,
+                msg: 'Sorry id order not found'
+            })
+        }
+
+        return res.status(200).json({
+            code: 200,
+            msg: 'success send product'
+        })
+    } catch (error) {
+        return res.status(400).json({
+            msg: String(error),
+            code: 400
+        })
+    }
+}
+
+export const handlerOrderFindByID = async(req: Request, res: Response): Promise<Response> => {
+    const id = req.params.id
+    try {
+        const data = await orderGetByID(id)
+        if (!data) {
+            return res.status(400).json({
+                code: 400,
+                msg: 'sorry order with this id not found'
+            })
+        }
+
+        return res.status(200).json({
+            code: 200,
+            msg: 'success get order',
+            data: data
         })
     } catch (error) {
         return res.status(400).json({
