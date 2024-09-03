@@ -49,6 +49,10 @@ export const callbackTripay = async(req: Request, res: Response): Promise<Respon
                     const _update_topups = await firestore.collection('topups').doc(json['merchant_ref']).update({
                         status: 'PAID'
                     })
+                } else if (json.status === "EXPIRED") {
+                    const _update_topups = await firestore.collection('topups').doc(json['merchant_ref']).update({
+                        status: 'EXPIRED'
+                    })
                 }
             }
 
