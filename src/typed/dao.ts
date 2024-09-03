@@ -64,6 +64,7 @@ export type ResponseTopup = {
     via: string;
     tanggal: string;
     status: string;
+    user_name: string;
 }
 
 export type ResponseGetTopup = {

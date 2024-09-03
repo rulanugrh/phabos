@@ -11,7 +11,8 @@ export const topupRegister = async(req: TopUp): Promise<ResponseTopup> => {
             via: req.via,
             balance: req.balance,
             status: 'UNPAID',
-            tanggal: new Date().toDateString()
+            tanggal: new Date().toDateString(),
+            user_name: req.user_name
         }
 
         const res = await firestore.collection('topups').doc(uuid())
@@ -24,7 +25,8 @@ export const topupRegister = async(req: TopUp): Promise<ResponseTopup> => {
             via: response?.via,
             balance: response?.balance,
             status: response?.status,
-            tanggal: response?.tanggal
+            tanggal: response?.tanggal,
+            user_name: response?.user_name
         }
 
         return result
@@ -95,7 +97,8 @@ export const topupGetAllByAdmin = async(): Promise<ResponseTopup[]> => {
                 balance: dt?.balance,
                 status: dt?.status,
                 tanggal: dt?.tanggal,
-                user_email: dt?.user_email
+                user_email: dt?.user_email,
+                user_name: dt?.user_name
             }
 
             return result

@@ -35,6 +35,22 @@ export const readEmail = (token: string): string => {
     }
 }
 
+export const readName = (token: string): string => {
+    try {
+        const { name } = jsonwebtoken.verify(token, process.env.APP_SECRET as string) as {
+            name: string
+        }
+
+        return name
+    } catch (error) {
+        if ( error instanceof JsonWebTokenError ) {
+            throw new Error(error.message)
+        } else {
+            throw new Error('Internal server Error')
+        }
+    }
+}
+
 export const readID = (token: string): string => {
     try {
         const { id } = jsonwebtoken.verify(token, process.env.APP_SECRET as string) as {

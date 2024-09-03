@@ -35,6 +35,7 @@ export type TopUp = {
     via: string;
     tanggal?: string;
     status?: string;
+    user_name?: string;
 }
 
 export type ProductUpdate = {

@@ -1,6 +1,6 @@
 import { Request, Response } from "express"
 import { TopUp } from "../typed/dto"
-import { readEmail } from "../middleware/jwt"
+import { readEmail, readName } from "../middleware/jwt"
 import { topupDelete, topupDetail, topupGetAllByAdmin, topupHistory, topupRegister } from "../service/topup"
 import { requestTransactionTopup } from "../util/tripay"
 import { userGetPhoneNumber } from "../service/user"
@@ -11,11 +11,13 @@ export const handlerTopupRegister = async(req: Request, res: Response): Promise<
     const token = req.headers.authorization as string
     try {
         const email = readEmail(token)
+        const name = readName(token)
         const phone_number = await userGetPhoneNumber(email)
         const request: TopUp = {
             via: via,
             balance: balance,
-            user_email: email
+            user_email: email,
+            user_name: name
         }
 
         const data = await topupRegister(request)
