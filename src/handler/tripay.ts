@@ -41,9 +41,16 @@ export const callbackTripay = async(req: Request, res: Response): Promise<Respon
                 const get_topup = (await firestore.collection('topups').doc(json['merchant_ref']).get()).data()
                 const get_user = await (await firestore.collection('users').doc(get_topup?.user_email).get()).data()
                 if (json.status === "PAID") {
-                    const _update_topup = await firestore.collection('users').doc(get_topup?.user_email).update({
-                        amount: get_user?.amount + json.total_amount
-                    })
+                    if (json.total_amount === 100000 || json.total_amount === 300000) {
+                        const bonus = json.total_amount * 0.05
+                        const _update_topup = await firestore.collection('users').doc(get_topup?.user_email).update({
+                            amount: get_user?.amount + json.total_amount + Number(bonus)
+                        })
+                    } else {
+                        const _update_topup = await firestore.collection('users').doc(get_topup?.user_email).update({
+                            amount: get_user?.amount + json.total_amount
+                        })   
+                    }
                     const _update_topups = await firestore.collection('topups').doc(json['merchant_ref']).update({
                         status: 'PAID'
                     })
