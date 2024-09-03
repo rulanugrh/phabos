@@ -30,7 +30,7 @@ export const requestTransaction = async(request: ResponseCreateOrder, user_email
                 }
             ],
             'callback_url': process.env.TRIPAY_URL_CALLBACK as string,
-            'expiry_time': expiry,
+            'expired_time': expiry,
             'signature': signature,
         }
 
@@ -79,7 +79,7 @@ export const requestTransactionTopup = async(request: ResponseTopup, user_email:
                 }
             ],
             'callback_url': process.env.TRIPAY_URL_CALLBACK as string,
-            'expiry_time': expiry,
+            'expired_time': expiry,
             'signature': signature,
         }
 
