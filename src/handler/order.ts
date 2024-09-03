@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { readEmail, readID } from "../middleware/jwt";
 import { OrderRequest, SendProduct } from '../typed/dto';
-import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete, sendProduct, orderGetByID } from "../service/order";
+import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete, sendProduct, orderGetByID, orderCountingBonus } from "../service/order";
 import { requestTransaction } from "../util/tripay";
 import { checkUserBalance, userGetPhoneNumber } from "../service/user";
 import { productStock } from '../service/product';
@@ -270,6 +270,23 @@ export const handlerOrderFindByID = async(req: Request, res: Response): Promise<
             code: 200,
             msg: 'success get order',
             data: data
+        })
+    } catch (error) {
+        return res.status(400).json({
+            msg: String(error),
+            code: 400
+        })
+    }
+}
+
+export const handlerOrderBonus = async(req: Request, res: Response): Promise<Response> => {
+    const amount = req.query.amount
+    try {
+        const total = await orderCountingBonus(Number(amount))
+        return res.status(200).json({
+            code: 200,
+            msg: 'success count bonus',
+            data: total
         })
     } catch (error) {
         return res.status(400).json({

@@ -294,3 +294,13 @@ export const orderGetByID = async(id: string): Promise<DetailOrder> => {
         throw new Error('Internal Server Error')
     }
 }
+
+export const orderCountingBonus = async(total: number): Promise<number> => {
+    try {
+        const bonus = total === 100000 || total === 300000 ? total * 0.05 : 0
+
+        return total + bonus
+    } catch (error) {
+        throw new Error("Invalid request amount")
+    }
+}

@@ -64,6 +64,7 @@ This contain all documentation about API default port in `http://ip:3000` :
     - [Topup Request](#topup-register)
     - [Topup Get All](#get-all-order-by-userid)
     - [Topup Get By ID](#get-topup-by-id)
+    - [Count Bonus](#count-bonus)
 
 ### Public
 
@@ -548,6 +549,25 @@ GET /api/product/get?name=string&category=string
             "description": "string"
         }
     ]
+}
+```
+#### Count Bonus
+```http
+GET /api/order/bonus?amount=number
+```
+- Header:
+  - Content-Type: `application/json`
+  - Accept: `application/json`
+  - Authorization: `token`
+- Query
+  - amount: `string`
+- Response:
+
+```json
+{
+    "code": "number",
+    "msg": "string",
+    "data": "number"
 }
 ```
 #### Create Order Request
