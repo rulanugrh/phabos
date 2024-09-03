@@ -8,7 +8,7 @@ dotenv.config()
 export const requestTransaction = async(request: ResponseCreateOrder, user_email: string, phone_number: string): Promise<{checkout_url: string, status: string}> => {
     try {
         const userData = (await firestore.collection('users').doc(user_email).get()).data()
-        const expiry = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+        const expiry = Math.floor(Date.now() / 1000)
 
         let signature = crypto.createHmac('sha256', process.env.TRIPAY_API_PRIVATE_KEY as string).update(
             process.env.TRIPAY_MERCHANT_CODE as string + request.id + request.nominal
@@ -58,7 +58,7 @@ export const requestTransaction = async(request: ResponseCreateOrder, user_email
 export const requestTransactionTopup = async(request: ResponseTopup, user_email: string, phone_number: string): Promise<{checkout_url: string, status: string}> => {
     try {
         const userData = (await firestore.collection('users').doc(user_email).get()).data()
-        const expiry = new Date(new Date().getTime() + 24 * 60 * 60 * 1000)
+        const expiry = Math.floor(Date.now() / 1000)
 
         let signature = crypto.createHmac('sha256', process.env.TRIPAY_API_PRIVATE_KEY as string).update(
             process.env.TRIPAY_MERCHANT_CODE as string + request.id + request.balance
