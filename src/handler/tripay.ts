@@ -41,9 +41,9 @@ export const callbackTripay = async(req: Request, res: Response): Promise<Respon
                 const get_topup = (await firestore.collection('topups').doc(json['merchant_ref']).get()).data()
                 const get_user = await (await firestore.collection('users').doc(get_topup?.user_email).get()).data()
                 if (json.status === "PAID") {
-                    const bonus = json.total_amount === 100000 || json.total_amount === 300000 ? json.total_amount * 0.5 : 0;
+                    const bonus = json.amount_received === 100000 || json.amount_received === 300000 ? json.amount_received * 0.05 : 0;
                     const _update_topup = await firestore.collection('users').doc(get_topup?.user_email).update({
-                        amount: get_user?.amount + json.total_amount + Number(bonus)
+                        amount: get_user?.amount + json.amount_received + Number(bonus)
                     })
                     
                     const _update_topups = await firestore.collection('topups').doc(json['merchant_ref']).update({
@@ -53,7 +53,12 @@ export const callbackTripay = async(req: Request, res: Response): Promise<Respon
                     const _update_topups = await firestore.collection('topups').doc(json['merchant_ref']).update({
                         status: 'EXPIRED'
                     })
+                } else if (json.status === "FAILED") {
+                    const _update_topups = await firestore.collection('topups').doc(json['merchant_ref']).update({
+                        status: 'FAILED'
+                    })
                 }
+                
             }
 
         }
