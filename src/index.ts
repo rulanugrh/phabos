@@ -4,7 +4,8 @@ import dotenv from 'dotenv';
 
 dotenv.config()
 const app: Express = express()
-const port = process.env.APP_PORT  ?? 3000
+const port = process.env.APP_PORT as unknown as number ?? 3000
+const host = process.env.APP_HOST ?? '0.0.0.0'
 
 async function main() {
     app.use(express.json())
@@ -19,9 +20,8 @@ async function main() {
 
     Routes(app)
 
-    app.listen(port, () => {
-        console.log(`Server running at: ${port}`)
-    })
+    app.listen(port, host)
+    console.log(`Server running at: ${host}:${port}`)
 }
 
 main()
