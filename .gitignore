@@ -19,3 +19,6 @@ node_modules/*
 .env.prod
 .env.dev
 config/key.json
+config/server.crt
+config/server.key
+config/nginx.conf
