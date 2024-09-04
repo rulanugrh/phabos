@@ -12,7 +12,6 @@ export type ListPembelian = {
 export type GetAllOrder = {
     id: string;
     via: string;
-    user_id: string;
     category: string;
     product_name: string;
     tanggal?: string
@@ -20,6 +19,7 @@ export type GetAllOrder = {
     process: string;
     total: string;
     checkout_url: string;
+    user_name: string;
 }
 
 export type GetUser = {

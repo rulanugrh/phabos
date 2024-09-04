@@ -18,10 +18,11 @@ export const orderRegister = async(req: OrderRequest): Promise<ResponseCreateOrd
             tanggal_pesanan: new Date().toDateString(),
             via: req.via,
             product_id: req.product_id,
+            user_name: req.user_name
         }
 
-        const _order = await firestore.collection('orders').doc(uuid())
-        const _set = _order.set(data)
+        const _order = firestore.collection('orders').doc(uuid())
+        const _set = await _order.set(data)
         const result = (await firestore.collection('orders').doc(_order.id).get()).data()
 
         const response: ResponseCreateOrder = {
@@ -128,7 +129,7 @@ export const orderCountingPemasukanTotal = async(): Promise<number> => {
 
 export const orderCancel = async(id: string, user_email: string): Promise<boolean> => {
     try {
-        const data = await firestore.collection('orders').doc(id)
+        const data = firestore.collection('orders').doc(id)
         const get_data_order = (await data.get()).data()
         const get_data_product = (await firestore.collection('products').doc(get_data_order?.product_id).get()).data()
         const _update_data_product = await firestore.collection('products').doc(get_data_order?.product_id).update({
@@ -139,7 +140,9 @@ export const orderCancel = async(id: string, user_email: string): Promise<boolea
         const _update_amount = await firestore.collection('users').doc(user_email).update({
             amount: get_user_data?.amount + get_data_order?.total
         })
-        const _deleted = data.delete()
+        const _deleted = await data.update({
+            status: 'Cancel'
+        })
 
         return true
     } catch (error) {
@@ -207,7 +210,7 @@ export const orderGetAllForAdmin = async(): Promise<GetAllOrder[]> => {
                 tanggal: dt.tanggal_pesanan,
                 process: dt.process,
                 checkout_url: dt.checkout_url,
-                user_id: dt.user_id
+                user_name: dt.user_name
             }
 
             return result

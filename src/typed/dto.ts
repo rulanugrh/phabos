@@ -27,6 +27,7 @@ export type OrderRequest = {
     via: string;
     status?: string
     jumlah: number;
+    user_name: string;
 }
 
 export type TopUp = {

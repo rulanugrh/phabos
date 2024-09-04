@@ -34,7 +34,6 @@ export const topupRegister = async(req: TopUp): Promise<ResponseTopup> => {
         if (error instanceof FirebaseFirestoreError) {
             throw new Error(error.message)
         }
-        console.log(error)
         throw new Error('Internal Server Error')
     }
 }

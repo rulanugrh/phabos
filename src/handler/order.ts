@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { readEmail, readID } from "../middleware/jwt";
+import { readEmail, readID, readName } from "../middleware/jwt";
 import { OrderRequest, SendProduct } from '../typed/dto';
 import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete, sendProduct, orderGetByID, orderCountingBonus } from "../service/order";
 import { requestTransaction } from "../util/tripay";
@@ -13,13 +13,15 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
     try {
         const user_id = readID(token)
         const user_email = readEmail(token)
+        const user_name = readName(token)
         const phone_number = await userGetPhoneNumber(user_email)
         const request: OrderRequest = {
             user_id: user_id,
             product_id: product_id,
             via: via,
             jumlah: jumlah,
-            status: "UNPAID"
+            status: "UNPAID",
+            user_name: user_name
         }
 
         const check_stock = await productStock(product_id, jumlah)
