@@ -15,7 +15,7 @@ RUN npm install
 # COPY project
 COPY . .
 
-RUN npm run build
+RUN npm run seed && npm run build
 
 # Publisher port
 EXPOSE 3000
