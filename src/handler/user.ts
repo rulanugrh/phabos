@@ -135,3 +135,11 @@ export const handlerUserUpdatePassword = async(req: Request, res: Response): Pro
         })
     }
 }
+
+export const homeHandler = async (req: Request, res: Response): Promise<Response> => {
+    try {
+        return res.status(200).send("Hello World")
+    } catch (error) {
+        return res.status(500).send(String(error))
+    }
+}
