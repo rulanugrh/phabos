@@ -11,7 +11,7 @@ services:
     hostname: app-backend
 
     # Type: Build Dockerfile
-    # EXPOSE_PORT: Environtment Exposed App Port
+    # APP_PORT: Environtment Exposed App Port
     # Build dockerfile dengan path yang telah ditentukan
     # Path berasal dari context yang di konfigurasi
     build:
@@ -32,7 +32,6 @@ services:
     hostname: app-view
 
     # Type: Build Dockerfile
-    # EXPOSE_PORT: Environtment Exposed App Port
     # Build dockerfile dengan path yang telah ditentukan
     # Path berasal dari context yang di konfigurasi
     build:
