@@ -1,13 +1,22 @@
 import express, { Express, Request, Response } from "express"
 import { Routes } from "./routes"
 import dotenv from 'dotenv';
+import cors from "cors";
 
 dotenv.config()
 const app: Express = express()
 const port = process.env.APP_PORT as unknown as number ?? 3000
 const host = process.env.APP_HOST ?? '0.0.0.0'
 
+const allowedOrigins = [process.env.URL_PRIMARY, process.env.URL_SECONDARY];
+
+const options: cors.CorsOptions = {
+    origin: allowedOrigins as string[],
+    methods: ["PUT", "POST", "GET", "DELETE", "OPTIONS"],
+    optionsSuccessStatus: 200
+}
 async function main() {
+    app.use(cors(options))
     app.use(express.json())
     
     app.get('/', async (req: Request, res: Response): Promise<Response> => {
