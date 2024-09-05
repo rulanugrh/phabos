@@ -8,16 +8,22 @@ const app: Express = express()
 const port = process.env.APP_PORT as unknown as number ?? 3000
 const host = process.env.APP_HOST ?? '0.0.0.0'
 
-const allowedOrigins = [process.env.URL_PRIMARY, process.env.URL_SECONDARY];
-
 const options: cors.CorsOptions = {
-    origin: allowedOrigins as string[],
+    origin: "*",
     methods: ["PUT", "POST", "GET", "DELETE", "OPTIONS"],
-    optionsSuccessStatus: 200
+    optionsSuccessStatus: 200,
+    allowedHeaders: [
+        "Content-Type",
+        "Authorization",
+        "Accept",
+        "Accept-Encoding",
+        "Origin"
+    ]
 }
 async function main() {
     app.use(cors(options))
     app.use(express.json())
+    app.options("*", cors(options))
     
     app.get('/', async (req: Request, res: Response): Promise<Response> => {
         try {
