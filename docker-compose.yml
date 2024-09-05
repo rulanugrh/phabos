@@ -8,6 +8,7 @@ services:
 
   app-backend:
     container_name: app-backend
+    hostname: app-backend
 
     # Type: Build Dockerfile
     # EXPOSE_PORT: Environtment Exposed App Port
@@ -21,6 +22,27 @@ services:
     env_file: ".env"
     ports:
       - ${APP_PORT}:3000
+    # Type: Depending Service
+    # Depend database untuk proses ekskusi query
+    networks:
+      - apps
+
+  app-view:
+    container_name: app-view
+    hostname: app-view
+
+    # Type: Build Dockerfile
+    # EXPOSE_PORT: Environtment Exposed App Port
+    # Build dockerfile dengan path yang telah ditentukan
+    # Path berasal dari context yang di konfigurasi
+    build:
+      context: ./view/
+      dockerfile: Dockerfile
+
+    # Type: Environment File
+    env_file: ".env"
+    ports:
+      - 8080:8080
     # Type: Depending Service
     # Depend database untuk proses ekskusi query
     networks:
