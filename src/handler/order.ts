@@ -2,8 +2,7 @@ import { Request, Response } from "express";
 import { readEmail, readID, readName } from "../middleware/jwt";
 import { OrderRequest, SendProduct } from '../typed/dto';
 import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete, sendProduct, orderGetByID, orderCountingBonus } from "../service/order";
-import { requestTransaction } from "../util/tripay";
-import { checkUserBalance, userGetPhoneNumber } from "../service/user";
+import { checkUserBalance } from "../service/user";
 import { productStock } from '../service/product';
 
 export const handlerOrderRegister = async(req: Request, res: Response): Promise<Response> => {
@@ -14,7 +13,6 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
         const user_id = readID(token)
         const user_email = readEmail(token)
         const user_name = readName(token)
-        const phone_number = await userGetPhoneNumber(user_email)
         const request: OrderRequest = {
             user_id: user_id,
             product_id: product_id,
@@ -43,44 +41,20 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
         }
 
         const response = await orderRegister(request)
-        if (via === "ACCOUNT") {
-            const verify = await orderWithAmount(user_email, response, request)
-            await orderUpdateCheckoutURL(response.id, '-')
-            return res.status(201).json({
-                code: 201,
-                msg: 'success create order',
-                data: {
-                    product_name: response.product_name,
-                    product_price: response.price,
-                    quantity: response.quantity,
-                    total: response.nominal,
-                    checkout_url: '-',
-                    status: verify
-                },
-            })
-        } else {
-            const { checkout_url, status } = await requestTransaction(response, user_email, phone_number)
-            if (!checkout_url)  {
-                await orderDelete(response.id)
-                return res.status(504).json({
-                    code: 504,
-                    msg: 'Sorry the payment system is having problems. Please re-request again'
-                })
-            }
-            await orderUpdateCheckoutURL(response.id, checkout_url)
-            return res.status(201).json({
-                code: 201,
-                msg: 'success create order',
-                data: {
-                    product_name: response.product_name,
-                    product_price: response.price,
-                    quantity: response.quantity,
-                    total: response.nominal,
-                    checkout_url: checkout_url,
-                    status: status
-                },
-            })
-        }
+        const verify = await orderWithAmount(user_email, response, request)
+        await orderUpdateCheckoutURL(response.id, '-')
+        return res.status(201).json({
+            code: 201,
+            msg: 'success create order',
+            data: {
+                product_name: response.product_name,
+                product_price: response.price,
+                quantity: response.quantity,
+                total: response.nominal,
+                checkout_url: '-',
+                status: verify
+            },
+        })
     } catch (error) {
         return res.status(400).json({
             msg: String(error),

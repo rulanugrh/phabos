@@ -80,12 +80,6 @@ export const orderList = async(id: string): Promise<ListPembelian[]> => {
 export const orderCountingPemasukanHariIni = async(): Promise<number> => {
     try {
         let num = 0
-        const snapshot = await firestore.collection('orders').where("status", "==", "Success").where("tanggal_pesanan", "==", new Date().toDateString()).get()
-        const _result = snapshot.docs.map((doc) => {
-            const dt = doc.data()
-            num += dt?.total as number
-        })
-
         const snapshot_topup = await firestore.collection('topups').where("status", '==', 'PAID').where("tanggal", "==", new Date().toDateString()).get()
         const _res = snapshot_topup.docs.map((doc) => {
             const dt = doc.data()
@@ -105,11 +99,6 @@ export const orderCountingPemasukanHariIni = async(): Promise<number> => {
 export const orderCountingPemasukanTotal = async(): Promise<number> => {
     try {
         let num = 0
-        const snapshot = await firestore.collection('orders').where("status", "==", "Success").get()
-        const _result = snapshot.docs.map((doc) => {
-            const dt = doc.data()
-            num += dt?.total as number
-        })
 
         const snapshot_topup = await firestore.collection('topups').where("status", '==', 'PAID').get()
         const _res = snapshot_topup.docs.map((doc) => {
