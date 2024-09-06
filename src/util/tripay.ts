@@ -1,4 +1,4 @@
-import { ResponseCreateOrder, ResponseTopup } from "../typed/dao";
+import { ResponseTopup } from "../typed/dao";
 import axios, { AxiosError } from "axios";
 import crypto from "crypto"
 import { firestore } from "../config/firebase";

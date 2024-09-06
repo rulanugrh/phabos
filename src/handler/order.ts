@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { readEmail, readID, readName } from "../middleware/jwt";
 import { OrderRequest, SendProduct } from '../typed/dto';
-import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, orderDelete, sendProduct, orderGetByID, orderCountingBonus } from "../service/order";
+import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, sendProduct, orderGetByID, orderCountingBonus } from "../service/order";
 import { checkUserBalance } from "../service/user";
 import { productStock } from '../service/product';
 
