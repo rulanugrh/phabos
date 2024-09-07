@@ -18,7 +18,8 @@ export const orderRegister = async(req: OrderRequest): Promise<ResponseCreateOrd
             tanggal_pesanan: new Date().toDateString(),
             via: req.via,
             product_id: req.product_id,
-            user_name: req.user_name
+            user_name: req.user_name,
+            user_email: req.user_email,
         }
 
         const _order = firestore.collection('orders').doc(uuid())
@@ -116,7 +117,7 @@ export const orderCountingPemasukanTotal = async(): Promise<number> => {
     }
 }
 
-export const orderCancel = async(id: string, user_email: string): Promise<boolean> => {
+export const orderCancel = async(id: string): Promise<boolean> => {
     try {
         const data = firestore.collection('orders').doc(id)
         const get_data_order = (await data.get()).data()
@@ -125,8 +126,8 @@ export const orderCancel = async(id: string, user_email: string): Promise<boolea
             stock: get_data_product?.stock + get_data_order?.jumlah
         })
         
-        const get_user_data = (await firestore.collection('users').doc(user_email).get()).data()
-        const _update_amount = await firestore.collection('users').doc(user_email).update({
+        const get_user_data = (await firestore.collection('users').doc(get_data_order?.user_email).get()).data()
+        const _update_amount = await firestore.collection('users').doc(get_data_order?.user_email).update({
             amount: get_user_data?.amount + get_data_order?.total
         })
         const _deleted = await data.update({
@@ -295,5 +296,23 @@ export const orderCountingBonus = async(total: number): Promise<number> => {
         return total + bonus
     } catch (error) {
         throw new Error("Invalid request amount")
+    }
+}
+
+export const orderCheckCancel = async(id: string): Promise<boolean> => {
+    try {
+        const data = (await firestore.collection('orders').doc(id).get()).data()
+
+        if (data?.status !== "Cancel") {
+            return false
+        }
+
+        return true
+    } catch (error) {
+        if (error instanceof FirebaseFirestoreError) {
+            throw new Error(error.message)
+        }
+
+        throw new Error('Internal Server Error')
     }
 }

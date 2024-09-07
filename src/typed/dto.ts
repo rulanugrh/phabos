@@ -28,6 +28,7 @@ export type OrderRequest = {
     status?: string
     jumlah: number;
     user_name: string;
+    user_email: string;
 }
 
 export type TopUp = {
@@ -40,11 +41,12 @@ export type TopUp = {
 }
 
 export type ProductUpdate = {
-    name?: string;
-    category?: string;
-    price?: number;
-    description?: string;
-    process?: string;
+    name: string;
+    category: string;
+    price: number;
+    description: string;
+    process: string;
+    stock: string;
 }
 
 

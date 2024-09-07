@@ -78,13 +78,15 @@ export const handlerProductGetAll = async(req: Request, res: Response): Promise<
 
 export const handlerProductUpdate = async(req: Request, res: Response): Promise<Response> => {
     const id = req.params.id
+    const { name, price, description, category, process, stock } = req.body
     try {
         const request: ProductUpdate = {
-            name: req.body?.name,
-            price: req.body?.price,
-            description: req.body?.description,
-            category: req.body?.category,
-            process: req.body?.process
+            name: name,
+            price: price,
+            description: description,
+            category: category,
+            process: process,
+            stock: stock
         }
 
         const data = await productUpdate(id, request)

@@ -89,14 +89,23 @@ export const productGetAll = async(): Promise<ResponseGetProduct[]> => {
 
 export const productUpdate = async(id: string, req: ProductUpdate): Promise<ResponseGetProduct> => {
     try {
+        const get = (await firestore.collection('products').doc(id).get()).data()
         const request = {
             name: req.name,
             description: req.description,
             price: req.price,
             process: req.process,
-            category: req.category
+            category: req.category,
+            stock: req.stock,
         }
-        const _data = await firestore.collection('products').doc(id).set(request)
+        const _data = await firestore.collection('products').doc(id).update({
+            name: request.name || get?.name,
+            description: request.description || get?.description,
+            price: request.price || get?.price,
+            process: request.process || get?.process,
+            category: request.category || get?.category,
+            stock: request.stock
+        })
         const result = (await firestore.collection('products').doc(id).get()).data()
 
         const response: ResponseGetProduct = {

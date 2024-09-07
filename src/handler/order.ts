@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { readEmail, readID, readName } from "../middleware/jwt";
 import { OrderRequest, SendProduct } from '../typed/dto';
-import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, sendProduct, orderGetByID, orderCountingBonus } from "../service/order";
+import { orderCancel, orderCountingPemasukanHariIni, orderCountingPemasukanTotal, orderList, orderRegister, orderWithAmount, orderUpdateCheckoutURL, orderGetAllForAdmin, orderUpdateForAccept, sendProduct, orderGetByID, orderCountingBonus, orderCheckCancel } from "../service/order";
 import { checkUserBalance } from "../service/user";
 import { productStock } from '../service/product';
 
@@ -19,7 +19,8 @@ export const handlerOrderRegister = async(req: Request, res: Response): Promise<
             via: via,
             jumlah: jumlah,
             status: "UNPAID",
-            user_name: user_name
+            user_name: user_name,
+            user_email: user_email
         }
 
         const check_stock = await productStock(product_id, jumlah)
@@ -138,10 +139,17 @@ export const handlerOrderCountingPemasukanHariIni = async(req: Request, res: Res
 
 export const handlerOrderCancel = async(req: Request, res: Response): Promise<Response> => {
     const id = req.params.id
-    const token = req.headers.authorization as string
     try {
-        const email = readEmail(token)
-        const verify = await orderCancel(id, email)
+
+        const cancel = await orderCheckCancel(id)
+        if (cancel) {
+            return res.status(200).json({
+                code: 200,
+                msg: 'Sorry, this order has been cancel status'
+            })
+        }
+        
+        const verify = await orderCancel(id)
         if (!verify) {
             return res.status(400).json({
                 code: 400,
